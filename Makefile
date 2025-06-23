@@ -1,20 +1,34 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/06/23 16:19:58 by brivera           #+#    #+#              #
+#    Updated: 2025/06/23 20:03:24 by brivera          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME	:=	philo
 
 CC	:=	cc
-CFLAGS	:=	-Wall -Wextra -Werror #-fsanitize=thread
+CFLAGS	:=	-Wall -Wextra -Werror 
+DBGFLAGS := -g -fsanitize=thread
 
 SRC_DIR :=	src/
-SRCS	:=	$(SRC_DIR)main.c
+SRCS	:=	$(SRC_DIR)main.c $(SRC_DIR)utils.c $(SRC_DIR)input_check.c \
+			$(SRC_DIR)init_struct.c 
 
 OBJ_DIR	:=	obj/
 OBJS	:=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 INCLUDE	:=	include/philosophers.h
 
-RED	:=	\033[91;1m
-GREEN	:=	\033[92;1m
+RED		:=	\033[91;1m
+GREEN		:=	\033[92;1m
 CLEAR_COLOR	:=	\033[0m
-CYAN	:=	\033[96;1m
+CYAN		:=	\033[96;1m
 
 RM	:= rm -f
 
@@ -46,13 +60,13 @@ valgrind:
 		--show-reachable=yes \
 		--track-origins=yes \
 		./$(NAME)
-
 norminette:
 	@norminette $(SRCS) $(INCLUDE)
+	debug: CFLAGS += $(DBGFLAGS)
 
-.PHONY: clean fclean re norminette valgrind
+debug: fclean all
+	@echo "$(CYAN)🔍 Compilado en modo DEBUG\n$(CLEAR_COLOR)"
+
+.PHONY: clean fclean re norminette valgrind debug
 
 .DEFAULT_GOAL := all
-
-
-
