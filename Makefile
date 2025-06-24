@@ -17,8 +17,14 @@ CFLAGS	:=	-Wall -Wextra -Werror
 DBGFLAGS := -g -fsanitize=thread
 
 SRC_DIR :=	src/
-SRCS	:=	$(SRC_DIR)main.c $(SRC_DIR)utils.c $(SRC_DIR)input_check.c \
-			$(SRC_DIR)init_struct.c 
+SRCS	:=	$(SRC_DIR)main.c \
+			$(SRC_DIR)utils.c \
+			$(SRC_DIR)input_check.c \
+			$(SRC_DIR)init_struct.c \
+			$(SRC_DIR)pthread_01.c \
+			$(SRC_DIR)pthread_00.c \
+			$(SRC_DIR)pthread_free.c \
+			$(SRC_DIR)pthread_utils.c
 
 OBJ_DIR	:=	obj/
 OBJS	:=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -53,20 +59,28 @@ fclean:	clean
 re:	fclean all
 	@echo "$(CYAN)🔄 Proyecto reconstruido\n$(CLEAR_COLOR)"
 
+# Memory leaks (Valgrind)
 valgrind:
 	valgrind -s \
 		--leak-check=full \
 		--show-leak-kinds=all \
 		--show-reachable=yes \
 		--track-origins=yes \
-		./$(NAME)
+		./$(NAME) $(ARGS)
+# make valgrind ARGS="1 800 200 200"
+
+# Data races (Helgrind)
+data_races:
+	valgrind --tool=helgrind ./$(NAME)
+
+# Alternative: ThreadSanitizer (Clang)
+debug: fclean all
+	@echo "$(CYAN)🔍 Compilado en modo DEBUG\n$(CLEAR_COLOR)"
+
 norminette:
 	@norminette $(SRCS) $(INCLUDE)
 	debug: CFLAGS += $(DBGFLAGS)
 
-debug: fclean all
-	@echo "$(CYAN)🔍 Compilado en modo DEBUG\n$(CLEAR_COLOR)"
-
-.PHONY: clean fclean re norminette valgrind debug
+.PHONY: clean fclean re norminette valgrind debug data_races
 
 .DEFAULT_GOAL := all

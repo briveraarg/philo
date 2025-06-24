@@ -23,14 +23,15 @@ int	ph_init_forks(t_table *table)
 		return (FAIL);
 	while (i < table->num_philos)
 	{
-		if (pthread_mutex_init(&table->forks[i], NULL) != 0)
+		if (pthread_mutex_init(&table->forks[i], NULL) != SUCCESS)
 			return (FAIL);
 		i++;
 	}
 	return (SUCCESS);
 }
 
-// Inicializa la estructura t_table con los valores pasados por argumento
+// Inicializa la estructura t_table con los valores pasados como argumento
+
 int	ph_init_data(int argc, char **argv, t_table *table)
 {
 	table->num_philos = (unsigned int)ph_atol(argv[1]);
@@ -40,7 +41,7 @@ int	ph_init_data(int argc, char **argv, t_table *table)
 	if (argc == 6)
 		table->max_meals = (unsigned int)ph_atol(argv[5]);
 	else
-		table->max_meals = -1;
+		table->max_meals = NO_MAX_MEALS;
 	table->done = 0;
 	table->status = LIVE;
 	if (ph_init_forks(table) == FAIL)
@@ -49,9 +50,9 @@ int	ph_init_data(int argc, char **argv, t_table *table)
 	table->public_lock = malloc(sizeof(pthread_mutex_t));
 	if (!table->finished || !table->public_lock)
 		return (FAIL);
-	if (pthread_mutex_init(table->finished, NULL) != 0)
+	if (pthread_mutex_init(table->finished, NULL) != SUCCESS)
 		return (FAIL);
-	if (pthread_mutex_init(table->public_lock, NULL) != 0)
+	if (pthread_mutex_init(table->public_lock, NULL) != SUCCESS)
 		return (FAIL);
 	return (SUCCESS);
 }
@@ -77,7 +78,7 @@ int	ph_init_philos(t_table *table, t_philo *philos)
 		philos[i].left_fork = &table->forks[(i + 1) % table->num_philos];
 		philos[i].private_lock = &private[i];
 		philos[i].table = table;
-		if (pthread_mutex_init(&private[i], NULL) != 0)
+		if (pthread_mutex_init(&private[i], NULL) != SUCCESS)
 			return (FAIL);
 		i++;
 	}

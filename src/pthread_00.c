@@ -26,10 +26,10 @@
 void	ph_pick_up_forks(t_philo *philo)
 {
 	pthread_mutex_lock(philo->right_fork);
-	ph_print_msg(philo, "🍴 has taken a fork", 1);
+	ph_print_msg(philo, "🤚 has taken a fork", 1);
 	pthread_mutex_lock(philo->left_fork);
-	ph_print_msg(philo, "🍴 has taken a fork", 1);
-	ph_print_msg(philo, "🍝 is eating", 0);
+	ph_print_msg(philo, "🤚 has taken a fork", 1);
+	ph_print_msg(philo, "🍪 is eating", 0);
 }
 
 void	ph_rest_and_think(t_philo *philo)
@@ -48,7 +48,7 @@ int	ph_has_finished_meals(t_philo *philo)
 	finished = FALSE;
 	pthread_mutex_lock(philo->table->finished);
 	if (philo->meals_eaten == philo->table->max_meals
-		&& philo->table->max_meals != -1)
+		&& philo->table->max_meals != NO_MAX_MEALS)
 	{
 		philo->table->done++;
 		finished = TRUE;
@@ -63,11 +63,11 @@ void	ph_sleep_precise(unsigned long time)
 	unsigned long	end;
 	unsigned long	current;
 
-	start = get_time();
+	start = ph_get_time();
 	end = start + time;
 	while (1)
 	{
-		current = get_time();
+		current = ph_get_time();
 		if (current >= end)
 			break ;
 		else

@@ -82,3 +82,91 @@ void	*ph_thread_loop(void *arg)
 	}
 	return ((void *) 0);
 }
+
+int	ph_philo_check_deat(t_philo *philo)
+{
+	unsigned long	meal;
+
+	pthread_mutex_lock(philo->private_lock);
+	meal = philo->last_meal_time;
+	if ((ph_get_time() - meal) >= (unsigned long)philo->table->time_to_die
+		&& philo->meals_eaten != philo->table->max_meals)
+	{
+		pthread_mutex_unlock(philo->private_lock);
+		ph_print_msg(philo, "👻 has died", 2);
+		pthread_mutex_lock(philo->table->public_lock);
+		philo->table->status = DEAD;
+		pthread_mutex_unlock(philo->table->public_lock);
+		return (TRUE);
+	}
+	pthread_mutex_unlock(philo->private_lock);
+	return (FALSE);
+}
+
+int	ph_all_philos_finished(t_philo *philo)
+{
+	int	goal;
+	int	finished;
+
+	pthread_mutex_lock(philo->table->finished);
+	finished = philo->table->done;
+	goal = philo->table->num_philos;
+	pthread_mutex_unlock(philo->table->finished);
+	if (finished >= goal)
+		return (TRUE);
+	return (FALSE);
+}
+
+void	*ph_watch_philos(void *arg)
+{
+	unsigned int	i;
+	t_philo			*philos;
+
+	philos = (t_philo *)arg;
+	while (1)
+	{
+		i = 0;
+		while (i < philos->table->num_philos)
+		{
+			if (ph_philo_check_deat(&philos[i]) == TRUE) 
+				return ((void *)0);
+			i++;
+			if (ph_all_philos_finished(&philos[i]) == TRUE)
+				return ((void *) 0);
+		}
+	}
+	return ((void *)0);
+}
+
+void	ph_monitor(t_philo *philos, pthread_t *monitor)
+{
+	if (pthread_create(monitor, NULL, &ph_watch_philos, &philos) != SUCCESS)
+	{
+		ph_clean(philos);
+		return ;
+	}
+}
+/*
+ * ph_handle_single - Maneja el caso en que solo hay un filósofo.
+ *
+ * En este caso, el filósofo no puede tomar ambos tenedores,
+ * por lo que no puede comer.
+ * Se crea un hilo para ejecutar su rutina y un monitor que detectará su muerte.
+ * Luego se espera un poco más que 'time_to_die' para asegurarse de que muera.
+ * Finalmente, se limpian.
+ *
+ * @table: estructura con los parámetros globales de la simulación.
+ * @philo: puntero al único filósofo creado.
+ */
+
+void	ph_handle_single(t_table *table, t_philo *philo)
+{
+	table->start_time = ph_get_time();
+
+	ph_print_msg(&philo[0], "🤚 has taken a fork", 1);
+	ph_sleep_precise(table->time_to_die);
+	ph_print_msg(&philo[0], "👻 has died", 2);
+
+	ph_clean(philo);
+}
+

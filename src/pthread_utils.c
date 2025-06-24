@@ -97,7 +97,8 @@ void	ph_print_msg(t_philo *philo, char *msg, int i)
 	char			*time_str;
 	char			*id_str;
 
-	time = get_time() - philo->table->start_time;
+	(void) i;
+	time = ph_get_time() - philo->table->start_time;
 	pthread_mutex_lock(philo->table->public_lock);
 	if (philo->table->status == 0)
 	{

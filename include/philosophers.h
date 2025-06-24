@@ -29,6 +29,8 @@
 # define TRUE 0
 # define FALSE 1
 
+#define NO_MAX_MEALS -1
+
 typedef struct s_table
 {
 	unsigned long		start_time; // Marca de tiempo del inicio
@@ -41,7 +43,7 @@ typedef struct s_table
 	int					done; // 1 si todos comieron lo suficiente
 	pthread_mutex_t		*forks; // Array de mutex de los tenedores
 	pthread_mutex_t		*finished; // Mutex para proteger `done`
-	pthread_mutex_t		*public_lock; // Mutex para imprimir o sincro
+	pthread_mutex_t		*public_lock; // Mutex para imprimir
 	pthread_mutex_t		*private_locks;
 
 }	t_table;
@@ -49,7 +51,7 @@ typedef struct s_table
 typedef struct s_philo
 {
 	unsigned int		id; // ID del filósofo
-	unsigned int		meals_eaten;// Contador de comidas realizadas
+	int					meals_eaten;// Contador de comidas realizadas
 	unsigned long		last_meal_time; // Tiempo de la última comida
 	pthread_mutex_t		*left_fork; // Puntero al mutex del tenedor izquierdo
 	pthread_mutex_t		*right_fork; // Puntero al mutex del tenedor derecho
@@ -62,6 +64,14 @@ int				ph_input_check(int argc, char **argv);
 int				ph_init_structs(int arg, char **argv, t_table **t, t_philo **p);
 void			*ph_thread_loop(void *arg);
 void			ph_print_msg(t_philo *philo, char *msg, int i);
+void			ph_clean(t_philo *philo);
+int				ph_is_dead(t_philo *philo);
+void			ph_sleep_precise(unsigned long time);
+int				ph_has_finished_meals(t_philo *philo);
+void			ph_rest_and_think(t_philo *philo);
+void			ph_pick_up_forks(t_philo *philo);
+void			ph_routine(t_philo *philo);
+void			ph_handle_single(t_table *table, t_philo *philo);
 
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 /*								utils										 */
