@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:24:44 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/23 20:02:47 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/24 12:16:41 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_table
 {
 	unsigned long		start_time; // Marca de tiempo del inicio
 	unsigned int		num_philos; // Número de filósofos
-	int					max_meals; // Número máximo de comidas (-1 si no hay si infinito)
+	int					max_meals; // Número máximo de comidas
 	unsigned int		time_to_die; // Tiempo en ms antes de morir sin comer
 	unsigned int		time_to_eat; // Tiempo que tarda en comer
 	unsigned int		time_to_sleep; // Tiempo que tarda en dormir
@@ -58,7 +58,13 @@ typedef struct s_philo
 
 int				ph_input_check(int argc, char **argv);
 int				ph_init_structs(int arg, char **argv, t_table **t, t_philo **p);
-/*							utils								*/
+void			*ph_thread_loop(void *arg);
+void			ph_print_msg(t_philo *philo, char *msg, int i);
+
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/*								utils										 */
+/*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
 void			ft_putstr(char *str);
 long			ph_atol(const char *str);
 int				ft_isdigit(int c);

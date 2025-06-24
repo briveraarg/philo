@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:19:42 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/23 19:41:56 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/24 11:45:42 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,4 @@ void	ft_putstr(char *str)
 	write(1, str, len);
 }
 
-unsigned long	ph_get_time(void)
-{
-	struct timeval	tv;
-	unsigned long	time;
-
-	gettimeofday(&tv, NULL);
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	return (time);
-}
 
