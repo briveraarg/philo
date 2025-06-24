@@ -146,18 +146,23 @@ void	ph_monitor(t_philo *philos, pthread_t *monitor)
 		return ;
 	}
 }
-/*
- * ph_handle_single - Maneja el caso en que solo hay un filósofo.
+/**
+ * Maneja el caso especial en el que solo hay un filósofo en la mesa.
  *
- * En este caso, el filósofo no puede tomar ambos tenedores,
- * por lo que no puede comer.
- * Se crea un hilo para ejecutar su rutina y un monitor que detectará su muerte.
- * Luego se espera un poco más que 'time_to_die' para asegurarse de que muera.
- * Finalmente, se limpian.
+ * En el problema de los filósofos, si solo hay un filósofo, este solo puede
+ * tomar un tenedor y nunca podrá comer, por lo que inevitablemente muere.
+ * 
+ * Esta función:
+ * - Registra el tiempo de inicio.
+ * - Imprime un mensaje indicando que el filósofo ha tomado un tenedor.
+ * - Duerme durante el tiempo que tarda en morir por inanición.
+ * - Imprime un mensaje indicando que el filósofo ha muerto.
+ * - Limpia la memoria asociada a los filósofos.
  *
- * @table: estructura con los parámetros globales de la simulación.
- * @philo: puntero al único filósofo creado.
+ * @param table Puntero a la estructura principal de la mesa.
+ * @param philo Puntero al único filósofo presente.
  */
+
 
 void	ph_handle_single(t_table *table, t_philo *philo)
 {
@@ -166,7 +171,5 @@ void	ph_handle_single(t_table *table, t_philo *philo)
 	ph_print_msg(&philo[0], "🤚 has taken a fork", 1);
 	ph_sleep_precise(table->time_to_die);
 	ph_print_msg(&philo[0], "👻 has died", 2);
-
 	ph_clean(philo);
 }
-
