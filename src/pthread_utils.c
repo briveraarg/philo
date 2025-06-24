@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 11:44:20 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 12:16:12 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/24 14:16:20 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,4 +114,3 @@ void	ph_print_msg(t_philo *philo, char *msg, int i)
 	}
 	pthread_mutex_unlock(philo->table->public_lock);
 }
-

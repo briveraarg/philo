@@ -6,13 +6,14 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:00:34 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/23 20:01:25 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/24 14:14:55 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	ph_init_fork(t_table *table)
+// Inicializa los mutex de los tenedores
+int	ph_init_forks(t_table *table)
 {
 	unsigned int	i;
 
@@ -29,6 +30,7 @@ int	ph_init_fork(t_table *table)
 	return (SUCCESS);
 }
 
+// Inicializa la estructura t_table con los valores pasados por argumento
 int	ph_init_data(int argc, char **argv, t_table *table)
 {
 	table->num_philos = (unsigned int)ph_atol(argv[1]);
@@ -41,7 +43,7 @@ int	ph_init_data(int argc, char **argv, t_table *table)
 		table->max_meals = -1;
 	table->done = 0;
 	table->status = LIVE;
-	if (ph_init_fork(table) == FAIL)
+	if (ph_init_forks(table) == FAIL)
 		return (FAIL);
 	table->finished = malloc(sizeof(pthread_mutex_t));
 	table->public_lock = malloc(sizeof(pthread_mutex_t));
@@ -54,14 +56,17 @@ int	ph_init_data(int argc, char **argv, t_table *table)
 	return (SUCCESS);
 }
 
+
+// Inicializa los filósofos, sus locks privados y referencias a tenedores
 int	ph_init_philos(t_table *table, t_philo *philos)
 {
-	unsigned int			i;
-	pthread_mutex_t			*private;
+	unsigned int	i;
+	pthread_mutex_t	*private;
 
 	private = malloc(table->num_philos * sizeof(pthread_mutex_t));
 	if (!private)
 		return (FAIL);
+	table->private_locks = private;
 	i = 0;
 	while (i < table->num_philos)
 	{
@@ -79,6 +84,7 @@ int	ph_init_philos(t_table *table, t_philo *philos)
 	return (SUCCESS);
 }
 
+// Reserva memoria e inicializa estructuras principales
 int	ph_init_structs(int argc, char **argv, t_table **table, t_philo **philos)
 {
 	*table = malloc(sizeof(t_table));
@@ -93,3 +99,4 @@ int	ph_init_structs(int argc, char **argv, t_table **table, t_philo **philos)
 		return (FAIL);
 	return (SUCCESS);
 }
+

@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:24:44 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 12:16:41 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/24 14:17:59 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ typedef struct s_table
 	pthread_mutex_t		*forks; // Array de mutex de los tenedores
 	pthread_mutex_t		*finished; // Mutex para proteger `done`
 	pthread_mutex_t		*public_lock; // Mutex para imprimir o sincro
+	pthread_mutex_t		*private_locks;
+
 }	t_table;
 
 typedef struct s_philo
