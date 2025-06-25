@@ -1,0 +1,110 @@
+1. fork.
+Es una llamada al sistema (system call) que se utiliza en sistemas operativos Unix y Unix-like
+(como Linux) para crear un nuevo proceso. Este nuevo proceso, conocido como proceso hijo (child
+process), es una copia casi exacta del proceso que lo creó, llamado proceso padre (parent process). La función está definida en <unistd.h>.
+
+2. Sintaxis.
+
+pid_t fork(void);
+
+.- Valor de retorno.
+	.- En el proceso padre: Devuelve el identificador del proceso hijo (pid_t), que es un
+valor positivo.
+	.- En el proceso hijo: Devuelve 0.
+	.- En caso de error: Devuelve -1 y establece la variable global errno con el código del
+error.
+
+3. Funcionamiento.
+.- Cuando se llama a fork, el sistema operativo crea un nuevo proceso duplicando el espacio de
+memoria del proceso padre.
+.- El proceso hijo hereda una copia de todo el espacio de memoria del padre (incluyendo variables,
+descriptores de archivos abiertos, etc.).
+.- Aunque el espacio de memoria es inicialmente una copia, los cambios realizados por el hijo no
+afectan al padre y viceversa (gracias a una técnica llamada copy-on-write).
+.- Ambos procesos continúan ejecutándose desde el mismo punto inmediatamente después de la llamada
+a fork.
+
+4. Ejemplo Básico.
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+
+int main()
+{
+	pid_t pid = fork();
+	if (pid == -1)
+	{
+		// Error al crear el proceso
+		perror("Error al crear el proceso");
+		return 1;
+	}
+	else if (pid == 0)
+	{
+		// Código del proceso hijo
+		printf("Soy el proceso hijo con PID: %d\n", getpid());
+	}
+	else
+	{
+		// Código del proceso padre
+		printf("Soy el proceso padre con PID: %d, y creé un hijo con PID: %d\n", getpid(),
+			pid);
+	}
+	return 0;
+}
+
+5. Casos de Uso.
+.- Procesamiento paralelo: fork es útil para dividir el trabajo en procesos paralelos.
+.- Ejecutar nuevos programas: En combinación con exec (como execl, execvp, etc.), permite a un
+proceso hijo ejecutar un programa diferente al del padre.
+.- Multiproceso: Se utiliza en servidores para gestionar múltiples conexiones simultáneamente.
+
+6. Errores Comunes.
+.- Falta de control de errores: Si fork devuelve -1 (por ejemplo, debido a un límite de procesos),
+se debe manejar adecuadamente para evitar comportamientos inesperados.
+.- Sobrecarga del sistema: Crear demasiados procesos con fork puede saturar el sistema.
+.- Duplicación de descriptores abiertos: Los descriptores de archivos se copian al hijo, lo que
+puede causar conflictos si ambos procesos intentan acceder al mismo recurso sin coordinación.
+
+7. Consideraciones Importantes.
+.- Condiciones de carrera: Dado que el padre y el hijo se ejecutan simultáneamente, es fundamental
+sincronizar sus acciones si comparten recursos.
+.- Identificación de procesos: Se puede utilizar funciones como getpid() para obtener el ID del
+proceso actual y getppid() para obtener el ID del proceso padre.
+.- Uso combinado con wait: El proceso padre puede esperar a que el hijo termine usando wait o
+waitpid para evitar que el hijo quede como un proceso zombie.
+
+8. Ejemplo Avanzado: fork con exec.
+
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+int main()
+{
+	pid_t pid = fork();
+	if (pid == -1)
+	{
+		perror("Error al crear el proceso");
+		return 1;
+	}
+	else if (pid == 0)
+	{
+		// Código del hijo: ejecutar un comando externo
+		execlp("ls", "ls", "-l", NULL);
+		perror("Error al ejecutar ls");
+		return 1;
+	}
+	else
+	{
+		// Código del padre: esperar al hijo
+		wait(NULL);
+		printf("El proceso hijo ha terminado.\n");
+	}
+	return 0;
+}
+
+Con fork, se tiene un control completo sobre la creación de nuevos procesos y su interacción, pero
+también es necesario manejar cuidadosamente las implicaciones como sincronización, consumo de
+recursos y manejo de errores.

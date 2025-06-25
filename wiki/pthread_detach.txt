@@ -1,0 +1,54 @@
+1. pthread_detach.
+Se utiliza para marcar un hilo como "desprendido" o "detached". Esto significa que el
+sistema liberará automáticamente los recursos asociados con el hilo cuando termine su
+ejecución, sin necesidad de que otro hilo lo espere explícitamente con pthread_join.
+
+2. Sintaxis.
+
+int	pthread_detach(pthread_t thread);
+
+3. Parámetros.
+.- thread: Es el identificador del hilo que se desea marcar como desprendido.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve un código de error distinto de cero si ocurre un problema.
+
+5. Ejemplo de uso.
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void *print_message(void *arg)
+{
+	char *message = (char *)arg;
+	printf("%s\n", message);
+	return NULL;
+}
+
+int main()
+{
+	pthread_t thread;
+	char *message = "Hola desde el hilo desprendido";
+	if (pthread_create(&thread, NULL, print_message, (void *)message) != 0)
+	{
+		perror("Error al crear el hilo");
+		exit(EXIT_FAILURE);
+	}
+	if (pthread_detach(thread) != 0)
+	{
+		perror("Error al desprender el hilo");
+		exit(EXIT_FAILURE);
+	}
+	printf("El hilo se ha marcado como desprendido\n");
+	return 0;
+}
+
+6. Notas importantes.
+.- Recursos liberados automáticamente: No es necesario llamar a pthread_join para el hilo
+desprendido, ya que el sistema se encarga de liberar sus recursos.
+.- Uso adecuado: Es útil en situaciones donde no se necesita esperar a que el hilo
+termine, como en tareas de fondo o procesos independientes.
+.- Precaución: Una vez que un hilo se marca como desprendido, no se puede usar
+pthread_join para esperar su finalización.

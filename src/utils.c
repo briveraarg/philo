@@ -63,4 +63,19 @@ void	ft_putstr(char *str)
 	write(1, str, len);
 }
 
+void	*ft_calloc(size_t count, size_t size)
+{
+	unsigned char	*ptr;
+	size_t			total_bytes;
+
+	if (size != 0 && count >= SIZE_MAX / size)
+		return (NULL);
+	total_bytes = count * size;
+	ptr = malloc(total_bytes);
+	if (ptr == NULL)
+		return (NULL);
+	memset(ptr, 0, total_bytes);
+	return (ptr);
+}
+
 

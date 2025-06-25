@@ -1,0 +1,60 @@
+1. kill
+Se utiliza para enviar señales a procesos específicos en sistemas Unix. Es parte de la
+biblioteca estándar y se encuentra en el archivo de cabecera <signal.h>.
+
+2. Sintaxis.
+
+int	kill(pid_t pid, int sig);
+
+3. Parámetros.
+.- pid: Identificador del proceso al que se desea enviar la señal. Puede tomar los
+siguientes valores:
+.- Un número positivo: Envía la señal al proceso con el ID especificado.
+	.- 0: Envía la señal a todos los procesos en el mismo grupo de procesos que el
+	proceso llamante.
+	.- -1: Envía la señal a todos los procesos que el usuario tiene permiso para
+	enviar señales, excepto al proceso llamante y al proceso init.
+	.- Un número negativo distinto de -1: Envía la señal a todos los procesos en el
+	grupo de procesos especificado por el valor absoluto de pid.
+	.- sig: Número de la señal que se desea enviar. Las señales comunes incluyen:
+		.- SIGKILL: Termina el proceso de manera inmediata.
+		.- SIGTERM: Solicita la terminación del proceso de manera ordenada.
+		.- SIGSTOP: Detiene el proceso.
+		.- SIGCONT: Reanuda un proceso detenido.
+
+4. .Valor de retorno.
+.- Devuelve 0 si la señal se envió correctamente.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+5. Ejemplo de uso
+
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[])
+{
+	if (argc != 3)
+	{
+		fprintf(stderr, "Uso: %s <PID> <SIGNAL>\n", argv[0]);
+		exit(EXIT_FAILURE);
+	}
+	pid_t pid = atoi(argv[1]);
+	int sig = atoi(argv[2]);
+	if (kill(pid, sig) == -1)
+	{
+		perror("Error al enviar la señal");
+		exit(EXIT_FAILURE);
+	}
+	printf("Señal %d enviada al proceso %d\n", sig, pid);
+	return 0;
+}
+
+6. Notas importantes.
+.- Permisos: El proceso llamante debe tener los permisos necesarios para enviar señales al
+proceso objetivo.
+.- Precaución: Usar señales como SIGKILL puede terminar procesos de manera abrupta, lo que
+podría causar pérdida de datos o corrupción.
+.- Uso adecuado: Es útil para gestionar procesos, detener tareas o implementar mecanismos
+de comunicación entre procesos.

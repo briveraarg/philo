@@ -1,0 +1,149 @@
+1. waitpid.
+Es una función de bajo nivel que permite a un proceso padre esperar de manera más flexible a que
+un proceso hijo específico termine su ejecución. Forma parte de las herramientas para manejar la
+sincronización entre procesos y está definida en las bibliotecas <sys/types.h> y <sys/wait.h>.
+A diferencia de wait, que espera a cualquier hijo, waitpid permite especificar un proceso hijo en
+particular y proporcionar opciones adicionales para manejar el comportamiento de la espera.
+
+2. Sintaxis.
+
+pid_t waitpid(pid_t pid, int *status, int options);
+
+.- Parámetros.
+	.- pid: Especifica el proceso hijo a esperar. Puede tomar diferentes valores:
+		.- > 0: Espera específicamente al proceso hijo con el PID indicado.
+		.- -1: Equivalente a wait, espera a cualquier hijo.
+		.- 0: Espera a cualquier hijo que esté en el mismo grupo de procesos que el padre.
+		.- < -1: Espera a cualquier hijo en un grupo de procesos específico, indicado por el
+		valor absoluto de pid (por ejemplo, -PGID).
+	.- status: Puntero a un entero donde se almacena información sobre el estado de terminación
+	del hijo. Si no se necesita esta información, se puede pasar NULL.
+	.- options: Controla el comportamiento de waitpid. Valores comunes incluyen:
+		.- 0: Comportamiento predeterminado, espera hasta que el proceso hijo termine.
+		.- WNOHANG: No bloquea al proceso padre; si no hay un hijo que haya terminado,
+		retorna inmediatamente.
+		.- WUNTRACED: También retorna si un hijo ha sido detenido, en lugar de terminado.
+
+3. Valor de Retorno.
+.- > 0: Retorna el PID del proceso hijo que terminó o cambió de estado.
+.- 0: Si se usa WNOHANG, indica que ningún hijo ha cambiado de estado.
+.- -1: Indica un error y establece la variable global errno.
+
+4. Macros para Analizar el Estado.
+Las macros utilizadas con wait también son válidas para waitpid:
+.- WIFEXITED(status): Retorna verdadero si el proceso hijo terminó normalmente.
+.- WEXITSTATUS(status): Obtiene el código de salida del proceso hijo si terminó normalmente.
+.- WIFSIGNALED(status): Retorna verdadero si el proceso hijo fue terminado por una señal.
+.- WTERMSIG(status): Obtiene el número de la señal que terminó al hijo.
+.- WIFSTOPPED(status): Retorna verdadero si el proceso hijo fue detenido.
+.- WSTOPSIG(status): Obtiene la señal que detuvo al hijo.
+
+5. Ejemplo Básico.
+
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	pid_t pid = fork();
+
+	if (pid == -1)
+	{
+		perror("Error al crear proceso hijo");
+		return 1;
+	}
+	else if (pid == 0)
+	{
+		// Código del hijo
+		printf("Soy el proceso hijo con PID: %d\n", getpid());
+		sleep(2); // Simula trabajo del hijo
+		exit(42); // Finaliza con código de salida 42
+	}
+	else
+	{
+		// Código del padre
+		int status;
+		pid_t result = waitpid(pid, &status, 0); // Espera específicamente al hijo creado
+		if (result == -1)
+		{
+			perror("Error en waitpid");
+			return 1;
+		}
+		if (WIFEXITED(status))
+		{
+			printf("El proceso hijo con PID %d terminó normalmente con código: %d\n",
+			result, WEXITSTATUS(status));
+		}
+		else if (WIFSIGNALED(status))
+		{
+			printf("El proceso hijo fue terminado por una señal: %d\n",
+			WTERMSIG(status));
+		}
+	}
+	return 0;
+}
+
+6. Uso Avanzado con WNOHANG.
+Si no quieres que el proceso padre se bloquee esperando, puedes usar la opción WNOHANG:
+
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	pid_t pid = fork();
+	
+	if (pid == -1)
+	{
+		perror("Error al crear proceso hijo");
+		return 1;
+	}
+	else if (pid == 0)
+	{
+		// Código del hijo
+		printf("Soy el proceso hijo con PID: %d\n", getpid());
+		sleep(5); // Simula un trabajo largo
+		exit(0);  // Finaliza con éxito
+	}
+	else
+	{
+		// Código del padre
+		int status;
+		pid_t result;
+		do
+		{
+			result = waitpid(pid, &status, WNOHANG); // No bloquea
+			if (result == 0)
+			{
+				printf("El hijo aún no ha terminado...\n");
+				sleep(1); // Realiza otras tareas mientras espera
+			}
+		}
+		while (result == 0);
+		if (result == -1)
+		{
+			perror("Error en waitpid");
+			return 1;
+		}
+		printf("El proceso hijo terminó.\n");
+	}
+	return 0;
+}
+
+7. Errores Comunes.
+.- ECHILD: No hay procesos hijos existentes.
+.- EINVAL: Parámetros inválidos pasados a waitpid.
+.- EINTR: La llamada fue interrumpida por una señal antes de que el hijo cambiara de estado.
+
+8. Consideraciones Importantes.
+.- Evitar procesos zombies: waitpid es útil para limpiar procesos hijos terminados.
+.- Sincronización personalizada: A diferencia de wait, puedes esperar un hijo específico o
+gestionar múltiples hijos usando ciclos y opciones como WNOHANG.
+.- Flexibilidad: Es una herramienta poderosa para aplicaciones multiproceso donde el
+comportamiento de wait es demasiado genérico.

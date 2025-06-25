@@ -1,0 +1,49 @@
+1. Tipos de Mutex en POSIX pthread
+1.1 PTHREAD_MUTEX_NORMAL (Mutex estándar)
+.- Este es el tipo más básico de mutex.
+.- Si un hilo intenta bloquearlo cuando ya lo posee, puede generar un bloqueo indefinido.
+.- Se usa cuando un mutex solo protege un recurso compartido y los bloqueos siempre se liberan correctamente.
+
+pthread_mutex_t mutex;
+pthread_mutex_init(&mutex, NULL);  // Usa atributos por defecto (NORMAL)
+
+
+1.2 PTHREAD_MUTEX_ERRORCHECK (Mutex con verificación de errores)
+.- Similar al estándar, pero detecta errores comunes, como:
+	.- Si un hilo intenta bloquearlo dos veces → genera un error en lugar de bloquearse.
+	.- Si un hilo que no es el dueño intenta desbloquearlo → también genera un error.
+	.- Útil para depuración y detección de problemas de sincronización.
+
+pthread_mutexattr_t attr;
+pthread_mutexattr_init(&attr);
+pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_ERRORCHECK);
+pthread_mutex_init(&mutex, &attr);
+
+
+1.3 PTHREAD_MUTEX_RECURSIVE (Mutex recursivo)
+.- Permite que el mismo hilo pueda bloquearlo múltiples veces sin bloquearse indefinidamente.
+.- Es útil cuando una función recursiva necesita adquirir el mutex sin quedar bloqueada.
+.- Debe liberarse el mismo número de veces que fue bloqueado antes de estar disponible.
+
+pthread_mutexattr_t attr;
+pthread_mutexattr_init(&attr);
+pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
+pthread_mutex_init(&mutex, &attr);
+
+
+1.4 PTHREAD_MUTEX_DEFAULT (Comportamiento dependiente del sistema)
+.- Equivalente a PTHREAD_MUTEX_NORMAL, pero puede cambiar según la implementación del sistema.
+.- No se recomienda usarlo porque su comportamiento no siempre es predecible.
+
+1.5 Otros mecanismos de sincronización avanzados.
+.- Además de pthread_mutex_t, existen otros mecanismos de control de concurrencia:
+	.- pthread_rwlock_t → Bloqueos de lectura/escritura, permitiendo múltiples lectores pero solo un escritor.
+	.- pthread_cond_t → Variables de condición, usadas para que un hilo espere hasta que ocurra un evento.
+	.- pthread_spinlock_t → Bloqueo más rápido en sistemas multiprocesador, pero consume más CPU.
+
+1.6 Conclusión.
+.- pthread_mutex_t tiene varias variantes que mejoran el control sobre la ejecución concurrente.
+.- PTHREAD_MUTEX_NORMAL → Básico y eficiente.
+.- PTHREAD_MUTEX_ERRORCHECK → Detecta errores en bloqueos/desbloqueos.
+.- PTHREAD_MUTEX_RECURSIVE → Permite múltiples bloqueos por el mismo hilo.
+.- PTHREAD_MUTEX_DEFAULT → Similar al normal, pero depende del sistema.

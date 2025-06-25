@@ -1,0 +1,60 @@
+1. pthread_join
+Se utiliza para esperar a que un hilo específico termine su ejecución. Es una herramienta
+esencial para la sincronización de hilos en programas multihilo, ya que asegura que el
+hilo principal (o cualquier otro hilo) pueda esperar a que un hilo secundario complete
+su tarea antes de continuar. Esta incluida en <pthread.h>.
+
+2. Sintaxis.
+
+int	pthread_join(pthread_t thread, void **retval);
+
+3. Parámetros.
+.- thread: El identificador del hilo que se desea esperar.
+.- retval: Un puntero a un puntero donde se almacenará el valor de retorno del hilo. Si no
+se necesita este valor, se puede pasar como NULL.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve un código de error distinto de cero si ocurre un problema.
+
+5 Ejemplo de uso.
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void *print_message(void *arg)
+{
+	char *message = (char *)arg;
+	printf("%s\n", message);
+	return (void *)42; // Valor de retorno del hilo
+}
+
+int main()
+{
+	pthread_t thread;
+	void *retval;
+	if (pthread_create(&thread, NULL, print_message, "Hola desde el hilo") != 0)
+	{
+		perror("Error al crear el hilo");
+		exit(EXIT_FAILURE);
+	}
+	if (pthread_join(thread, &retval) != 0)
+	{
+		perror("Error al esperar el hilo");
+		exit(EXIT_FAILURE);
+	}
+	printf("El hilo terminó con el valor de retorno: %ld\n", (long)retval);
+	return 0;
+}
+
+6. Notas importantes.
+.- Sincronización: pthread_join asegura que el hilo llamante espere a que el hilo
+especificado termine antes de continuar.
+.- Recursos: Si no se llama a pthread_join para un hilo que no está desprendido
+(detached), los recursos asociados con ese hilo no se liberarán, lo que puede causar fugas
+de memoria.
+
+7. Errores comunes.
+.- Intentar unir un hilo que ya ha sido unido previamente.
+.- Intentar unir un hilo que ha sido marcado como desprendido con pthread_detach.

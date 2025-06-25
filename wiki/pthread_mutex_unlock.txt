@@ -1,0 +1,65 @@
+1. pthread_mutex_unlock
+Se utiliza para desbloquear un mutex previamente bloqueado por el mismo hilo. Esto permite
+que otros hilos puedan acceder a la sección crítica protegida por el mutex. Es parte de la
+biblioteca POSIX y se encuentra en el archivo de cabecera <pthread.h>.
+
+2. Sintaxis.
+
+int	pthread_mutex_unlock(pthread_mutex_t *mutex);
+
+3. Parámetros.
+.- mutex: Un puntero a la variable de tipo pthread_mutex_t que representa el mutex que se
+desea desbloquear.
+
+4. Valor de retorno.
+.- Devuelve 0 si el mutex se desbloquea correctamente.
+.- Devuelve un código de error distinto de cero si ocurre un problema.
+
+5. Ejemplo de uso
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+pthread_mutex_t mutex;
+int recurso_compartido = 0;
+
+void	*incrementar_recurso(void *arg)
+{
+	pthread_mutex_lock(&mutex); // Bloquea el mutex
+	recurso_compartido++;
+	printf("Recurso compartido: %d\n", recurso_compartido);
+	pthread_mutex_unlock(&mutex); // Desbloquea el mutex
+	return NULL;
+}
+
+int main()
+{
+	pthread_t hilo1, hilo2;
+	// Inicializar el mutex
+	if (pthread_mutex_init(&mutex, NULL) != 0)
+	{
+		perror("Error al inicializar el mutex");
+		exit(EXIT_FAILURE);
+	}
+	// Crear hilos
+	pthread_create(&hilo1, NULL, incrementar_recurso, NULL);
+	pthread_create(&hilo2, NULL, incrementar_recurso, NULL);
+	// Esperar a que los hilos terminen
+	pthread_join(hilo1, NULL);
+	pthread_join(hilo2, NULL);
+	// Destruir el mutex
+	pthread_mutex_destroy(&mutex);
+	return 0;
+}
+
+6. Notas importantes.
+.- Uso correcto: Solo el hilo que bloqueó el mutex puede desbloquearlo. Intentar
+desbloquear un mutex bloqueado por otro hilo o que no está bloqueado puede causar un
+comportamiento indefinido.
+.- Sincronización: Asegúrate de que cada llamada a pthread_mutex_lock tenga una
+correspondiente a pthread_mutex_unlock para evitar bloqueos permanentes (deadlocks).
+
+8. Errores comunes:
+.- Intentar desbloquear un mutex no inicializado.
+.- Desbloquear un mutex que ya está desbloqueado.

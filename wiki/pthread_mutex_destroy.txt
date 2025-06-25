@@ -1,0 +1,51 @@
+1. pthread_mutex_destroy
+Se utiliza para liberar los recursos asociados con un mutex previamente inicializado. Es
+parte de la biblioteca POSIX y se encuentra en el archivo de cabecera <pthread.h>.
+
+2. Sintaxis.
+
+int	pthread_mutex_destroy(pthread_mutex_t *mutex);
+
+3. Parámetros.
+.- mutex: Un puntero a la variable de tipo pthread_mutex_t que representa el mutex que se
+desea destruir.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve un código de error distinto de cero si ocurre un problema.
+
+5. Ejemplo de uso
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	pthread_mutex_t mutex;
+	// Inicializar el mutex
+	if (pthread_mutex_init(&mutex, NULL) != 0)
+	{
+		perror("Error al inicializar el mutex");
+		exit(EXIT_FAILURE);
+	}
+	// Destruir el mutex
+	if (pthread_mutex_destroy(&mutex) != 0)
+	{
+		perror("Error al destruir el mutex");
+		exit(EXIT_FAILURE);
+	}
+	printf("Mutex destruido correctamente\n");
+	return 0;
+}
+
+6. Notas importantes.
+.- Condición de desbloqueo: Antes de destruir un mutex, asegúrate de que esté
+desbloqueado. Intentar destruir un mutex bloqueado puede causar un comportamiento
+indefinido.
+.- Uso adecuado: Es importante destruir los mutexes que ya no se necesitan para evitar
+fugas de memoria.
+
+7. Errores comunes:
+.- Intentar destruir un mutex que no ha sido inicializado.
+.- Destruir un mutex mientras otro hilo está intentando bloquearlo.

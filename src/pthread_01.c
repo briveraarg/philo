@@ -66,7 +66,7 @@ int	ph_philo_check_deat(t_philo *philo)
 		&& philo->meals_eaten != philo->table->max_meals)
 	{
 		pthread_mutex_unlock(philo->private_lock);
-		ph_print_msg(philo, "👻 has died", 2);
+		ph_print_msg(philo, DIED, 2);
 		pthread_mutex_lock(philo->table->public_lock);
 		philo->table->status = DEAD;
 		pthread_mutex_unlock(philo->table->public_lock);

@@ -1,0 +1,45 @@
+1. usleep.
+Se utiliza para suspender la ejecución de un programa durante un intervalo de tiempo
+específico, medido en microsegundos. Es parte de la biblioteca estándar de Unix y se
+encuentra en el archivo de cabecera <unistd.h>.
+
+2. Sintaxis.
+
+int usleep(useconds_t usec);
+
+.- Parámetros.
+	.- usec: Es un valor de tipo useconds_t que indica el número de microsegundos que
+	el programa debe esperar. Un segundo equivale a 1,000,000 microsegundos.
+
+3.- Funcionamiento.
+Cuando se llama a usleep, el programa se pausa durante el tiempo especificado en usec.
+Sin embargo, la pausa puede ser ligeramente más larga debido a la actividad del sistema o
+al tiempo necesario para procesar la llamada.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+5. Errores comunes.
+.- EINVAL: Si el valor de usec no es válido (por ejemplo, si es mayor o igual a 1,000,000).
+.- EINTR: Si la pausa es interrumpida por una señal.
+
+6. Ejemplo de uso.
+
+#include <unistd.h>
+#include <stdio.h>
+
+int main()
+{
+	printf("Inicio de la pausa\n");
+	usleep(500000); // Pausa de 500,000 microsegundos (0.5 segundos)
+	printf("Fin de la pausa\n");
+	return 0;
+}
+
+7. Notas importantes.
+.- La función usleep está obsoleta en algunos sistemas y se recomienda usar alternativas
+como nanosleep para mayor precisión y compatibilidad.
+.- La interacción de usleep con otras funciones de temporización, como alarm o nanosleep,
+puede ser indefinida.

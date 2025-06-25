@@ -43,10 +43,9 @@ char	*ft_itoa(int n)
 	unsigned int	num;
 	size_t			i;
 
-	str = (char *)malloc(ft_count_digits(n) + 1);
+	str = ft_calloc(ft_count_digits(n) + 1, sizeof(char));
 	if (!str)
 		return (NULL);
-	str[ft_count_digits(n)] = '\0';
 	if (n < 0)
 	{
 		str[0] = '-';
@@ -76,20 +75,23 @@ char	*ft_utoa(unsigned long n)
 	len = 1;
 	while (tmp > 9)
 	{
-		tmp = tmp / 10;
+		tmp /= 10;
 		len++;
 	}
-	str = malloc(len + 1);
+	str = ft_calloc(len + 1, sizeof(char));
 	if (!str)
 		return (NULL);
-	str[len--] = '\0';
+	str[len] = '\0';
+	len--;
 	while (len >= 0)
 	{
-		str[len--] = n % 10 + '0';
+		str[len] = n % 10 + '0';
 		n /= 10;
+		len--;
 	}
 	return (str);
 }
+
 
 void	ph_print_msg(t_philo *philo, char *msg, int i)
 {

@@ -1,0 +1,55 @@
+1. sem_unlink.
+Se utiliza para eliminar un semáforo con nombre del sistema. Esto significa que el nombre
+del semáforo se elimina inmediatamente, pero el semáforo en sí no se destruye hasta que
+todos los procesos que lo tienen abierto lo cierren. Es parte de la biblioteca POSIX y se
+encuentra en el archivo de cabecera <semaphore.h>.
+
+2. Sintaxis.
+
+int	sem_unlink(const char *name);
+
+3. Parámetros.
+.- name: Una cadena que representa el nombre del semáforo que se desea eliminar. Este
+nombre debe comenzar con un /.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+5. Ejemplo de uso.
+
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	// Crear un semáforo con nombre
+	sem_t *sem = sem_open("/mi_semaforo", O_CREAT, S_IRUSR | S_IWUSR, 1);
+	if (sem == SEM_FAILED)
+	{
+		perror("Error al abrir el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	// Eliminar el semáforo con nombre
+	if (sem_unlink("/mi_semaforo") != 0)
+	{
+		perror("Error al eliminar el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	printf("Semáforo eliminado correctamente\n");
+	// Cerrar el semáforo
+	sem_close(sem);
+	return 0;
+}
+
+6. Notas importantes.
+.- Persistencia: Aunque el nombre del semáforo se elimina inmediatamente, el semáforo
+sigue existiendo hasta que todos los procesos que lo tienen abierto lo cierren.
+.- Uso adecuado: Es importante llamar a sem_unlink cuando ya no se necesite el semáforo,
+para evitar que quede en el sistema de forma indefinida.
+
+7. Errores comunes:
+.- Intentar eliminar un semáforo que no existe (ENOENT).
+.- No tener permisos para eliminar el semáforo (EACCES).

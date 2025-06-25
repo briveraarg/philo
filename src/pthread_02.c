@@ -25,9 +25,9 @@ void	*ph_watch_philos(void *arg)
 		{
 			if (ph_philo_check_deat(&philos[i]) == TRUE) 
 				return ((void *)0);
-			i++;
 			if (ph_all_philos_finished(&philos[i]) == TRUE)
 				return ((void *) 0);
+			i++;
 		}
 	}
 	return ((void *)0);
@@ -35,8 +35,8 @@ void	*ph_watch_philos(void *arg)
 
 int	ph_monitor(t_philo *philos, pthread_t *monitor)
 {
-	if (pthread_create(monitor, NULL, &ph_watch_philos, &philos) != SUCCESS)
-		return (ph_clean(philos), FAIL);
+	if (pthread_create(monitor, NULL, &ph_watch_philos, philos) != SUCCESS)
+		return (FAIL);
 	return (SUCCESS);
 }
 
@@ -55,10 +55,12 @@ int	ph_run_threads(pthread_t *threads, t_table *table, t_philo *philos)
 	}
 	if (ph_monitor(philos, &monitor) != SUCCESS)
 		return (FAIL);
-	while (--i >= 0)
+	i = 0;
+	while (i < table->num_philos)
 	{
 		if (pthread_join(threads[i], NULL) != SUCCESS)
 			return (FAIL);
+		i++;
 	}
 	pthread_join(monitor, NULL);
 	return (SUCCESS);
@@ -68,7 +70,7 @@ int	ph_simulate(t_table *table, t_philo *philos)
 {
 	pthread_t	*threads;
 
-	threads = malloc((table->num_philos + 1) * sizeof(pthread_t));
+	threads = ft_calloc((table->num_philos + 1), sizeof(pthread_t));
 	if (!threads)
 		return (FAIL);
 	if (ph_run_threads(threads, table, philos) == FAIL)

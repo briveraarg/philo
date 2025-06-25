@@ -1,0 +1,53 @@
+1. pthread_create.
+Se utiliza para crear un nuevo hilo de ejecución dentro de un programa. Es parte de la
+biblioteca POSIX y se encuentra en el archivo de cabecera <pthread.h>.
+
+2. Sintaxis.
+
+int	pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg);
+
+3. Parámetros.
+.- thread: Un puntero a una variable de tipo pthread_t que identificará el hilo creado.
+.- attr: Un puntero a una estructura pthread_attr_t que especifica los atributos del hilo.
+Si se pasa como NULL, se utilizan los atributos predeterminados.
+.- start_routine: Un puntero a la función que ejecutará el hilo. Esta función debe tener
+la firma void *function(void *arg).
+.- arg: Un puntero a los argumentos que se pasarán a la función start_routine.
+
+4. Valor de retorno.
+.- Devuelve 0 si el hilo se crea correctamente.
+.- Devuelve un código de error distinto de cero si ocurre un problema.
+
+5. Ejemplo de uso.
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+void *print_message(void *arg)
+{
+	char *message = (char *)arg;
+	printf("%s\n", message);
+	return NULL;
+}
+
+int main()
+{
+	pthread_t thread;
+	char *message = "Hola desde el hilo";
+	if (pthread_create(&thread, NULL, print_message, (void *)message) != 0)
+	{
+		perror("Error al crear el hilo");
+		exit(EXIT_FAILURE);
+	}
+	pthread_join(thread, NULL); // Espera a que el hilo termine
+	return 0;
+}
+
+6. Notas importantes.
+.- Sincronización: Es importante usar mecanismos como mutexes o semáforos para evitar
+condiciones de carrera cuando varios hilos acceden a recursos compartidos.
+.- pthread_join: Se utiliza para esperar a que un hilo termine antes de continuar con la
+ejecución del programa principal.
+.- Compatibilidad: Asegúrate de compilar con la opción -pthread para incluir la
+biblioteca de hilos.

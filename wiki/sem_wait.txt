@@ -1,0 +1,64 @@
+1. sem_wait.
+Se utiliza para decrementar (bloquear) un semáforo de manera atómica. Si el valor del
+semáforo es mayor que cero, la función lo decrementa y continúa la ejecución. Si el valor
+es cero, el hilo o proceso llamante se bloquea hasta que el semáforo sea incrementado por
+otro hilo o proceso. Es parte de la biblioteca POSIX y se encuentra en el archivo de
+cabecera <semaphore.h>.
+
+2. Sintaxis.
+
+int	sem_wait(sem_t *sem);
+
+3. Parámetros.
+.- sem: Un puntero al objeto sem_t que representa el semáforo que se desea decrementar.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+5. Ejemplo de uso.
+
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+sem_t sem;
+
+void *tarea(void *arg)
+{
+	sem_wait(&sem); // Bloquea el semáforo
+	printf("Sección crítica\n");
+	sem_post(&sem); // Desbloquea el semáforo
+	return NULL;
+}
+
+int main()
+{
+	pthread_t hilo1, hilo2;
+	// Inicializar el semáforo
+	if (sem_init(&sem, 0, 1) != 0)
+	{
+		perror("Error al inicializar el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	// Crear hilos
+	pthread_create(&hilo1, NULL, tarea, NULL);
+	pthread_create(&hilo2, NULL, tarea, NULL);
+	// Esperar a que los hilos terminen
+	pthread_join(hilo1, NULL);
+	pthread_join(hilo2, NULL);
+	// Destruir el semáforo
+	sem_destroy(&sem);
+	return 0;
+}
+
+6. Notas importantes.
+.- Bloqueo atómico: sem_wait asegura que la operación de decremento sea atómica, evitando
+condiciones de carrera.
+.- Bloqueo: Si el valor del semáforo es cero, el hilo o proceso llamante se bloquea hasta
+que otro lo incremente con sem_post.
+
+7. Errores comunes:
+.- Intentar usar un semáforo no inicializado.
+.- Usar un semáforo que ya ha sido destruido.

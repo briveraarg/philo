@@ -18,7 +18,7 @@ int	ph_init_forks(t_table *table)
 	unsigned int	i;
 
 	i = 0;
-	table->forks = malloc(table->num_philos * sizeof(pthread_mutex_t));
+	table->forks = ft_calloc(table->num_philos, sizeof(pthread_mutex_t));
 	if (!table->forks)
 		return (FAIL);
 	while (i < table->num_philos)
@@ -46,8 +46,8 @@ int	ph_init_data(int argc, char **argv, t_table *table)
 	table->status = LIVE;
 	if (ph_init_forks(table) == FAIL)
 		return (FAIL);
-	table->finished = malloc(sizeof(pthread_mutex_t));
-	table->public_lock = malloc(sizeof(pthread_mutex_t));
+	table->finished = ft_calloc(1, sizeof(pthread_mutex_t));
+	table->public_lock = ft_calloc(1, sizeof(pthread_mutex_t));
 	if (!table->finished || !table->public_lock)
 		return (FAIL);
 	if (pthread_mutex_init(table->finished, NULL) != SUCCESS)
@@ -64,7 +64,7 @@ int	ph_init_philos(t_table *table, t_philo *philos)
 	unsigned int	i;
 	pthread_mutex_t	*private;
 
-	private = malloc(table->num_philos * sizeof(pthread_mutex_t));
+	private = ft_calloc(table->num_philos, sizeof(pthread_mutex_t));
 	if (!private)
 		return (FAIL);
 	table->private_locks = private;
@@ -88,12 +88,12 @@ int	ph_init_philos(t_table *table, t_philo *philos)
 // Reserva memoria e inicializa estructuras principales
 int	ph_init_structs(int argc, char **argv, t_table **table, t_philo **philos)
 {
-	*table = malloc(sizeof(t_table));
+	*table = ft_calloc(1, sizeof(t_table));
 	if (!*table)
 		return (FAIL);
 	if (ph_init_data(argc, argv, *table) == FAIL)
 		return (FAIL);
-	*philos = malloc(sizeof(t_philo) * (*table)->num_philos);
+	*philos = ft_calloc((*table)->num_philos, sizeof(t_philo));
 	if (!*philos)
 		return (FAIL);
 	if (ph_init_philos(*table, *philos) == FAIL)

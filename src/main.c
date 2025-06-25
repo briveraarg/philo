@@ -24,6 +24,7 @@ int	main(int argc, char **argv)
 	if (table->num_philos == 1)
 		return (ph_handle_single(table, philos), SUCCESS);
 	if (ph_simulate(table, philos) == FAIL)
-		return (FAIL);
+		return (ph_clean(philos), FAIL);
+	ph_clean(philos);
 	return (SUCCESS);
 }

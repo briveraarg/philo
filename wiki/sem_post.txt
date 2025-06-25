@@ -1,0 +1,53 @@
+1. sem_post.
+Se utiliza para incrementar el valor de un semáforo de manera atómica. Esto permite que
+otros procesos o hilos que estén esperando en el semáforo puedan continuar su ejecución.
+Es parte de la biblioteca POSIX y se encuentra en el archivo de cabecera <semaphore.h>.
+
+2. Sintaxis.
+
+int	sem_post(sem_t *sem);
+
+3. Parámetros.
+.- sem: Un puntero al objeto sem_t que representa el semáforo que se desea incrementar.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+5. Ejemplo de uso.
+
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	sem_t sem;
+	// Inicializar el semáforo
+	if (sem_init(&sem, 0, 1) != 0)
+	{
+		perror("Error al inicializar el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	// Incrementar el semáforo
+	if (sem_post(&sem) != 0)
+	{
+		perror("Error al incrementar el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	printf("Semáforo incrementado correctamente\n");
+	// Destruir el semáforo
+	sem_destroy(&sem);
+	return 0;
+}
+
+6. Notas importantes.
+.- Operación atómica: sem_post garantiza que el incremento del semáforo sea atómico,
+evitando condiciones de carrera.
+.- Desbloqueo: Si algún proceso o hilo está bloqueado en sem_wait, sem_post lo
+desbloqueará.
+
+7. Errores comunes:
+.- Intentar incrementar un semáforo no inicializado.
+.- Usar un semáforo que ya ha sido destruido.

@@ -1,0 +1,52 @@
+1. sem_close.
+Se utiliza para cerrar un semáforo con nombre previamente abierto mediante sem_open. Esto
+libera los recursos asociados con el semáforo en el proceso llamante, pero no elimina el
+semáforo del sistema (para eso se utiliza sem_unlink). Se incluye <semaphore.h>.
+
+2. Sintaxis.
+
+int	sem_close(sem_t *sem);
+
+3. Parámetros.
+.- sem: Un puntero al objeto sem_t que representa el semáforo que se desea cerrar.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+5. Ejemplo de uso.
+
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	sem_t *sem;
+	// Abrir un semáforo con nombre
+	sem = sem_open("/mi_semaforo", O_CREAT, S_IRUSR | S_IWUSR, 1);
+	if (sem == SEM_FAILED)
+	{
+		perror("Error al abrir el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	// Cerrar el semáforo
+	if (sem_close(sem) != 0)
+	{
+		perror("Error al cerrar el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	printf("Semáforo cerrado correctamente\n");
+	return 0;
+}
+
+6. Notas importantes.
+.- Persistencia: Aunque el semáforo se cierre, seguirá existiendo en el sistema hasta que
+se elimine explícitamente con sem_unlink.
+.- Uso adecuado: Es importante cerrar los semáforos que ya no se necesitan para liberar
+recursos en el proceso.
+
+7. Errores comunes:
+.- Intentar cerrar un semáforo no válido o no inicializado.
+.- Usar un semáforo que ya ha sido cerrado previamente.

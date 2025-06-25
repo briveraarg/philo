@@ -1,0 +1,57 @@
+1. sem_open
+Se utiliza para inicializar y abrir un semáforo con nombre, permitiendo la sincronización
+entre procesos. Es parte de la biblioteca POSIX y se encuentra en el archivo de cabecera
+<semaphore.h>.
+
+2. Sintaxis.
+
+sem_t	*sem_open(const char *name, int oflag, mode_t mode, unsigned int value);
+
+3. Parámetros.
+.- name: Una cadena que representa el nombre del semáforo. Este nombre debe comenzar con
+un / y ser único en el sistema.
+.- oflag: Especifica cómo se abrirá el semáforo. Puede incluir:
+	.- O_CREAT: Crea el semáforo si no existe.
+	.- O_EXCL: Usado junto con O_CREAT para indicar que la creación debe fallar si el
+	semáforo ya existe.
+.- mode: (Opcional) Especifica los permisos del semáforo, como S_IRUSR | S_IWUSR para
+lectura y escritura.
+.- value: (Opcional) Valor inicial del semáforo. Solo se usa si se crea un nuevo semáforo.
+
+4. Valor de retorno.
+.- Devuelve un puntero a un objeto sem_t si la operación se realiza con éxito.
+.- Devuelve SEM_FAILED si ocurre un error, y establece la variable global errno para
+indicar el tipo de error.
+
+5. Ejemplo de uso.
+
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	sem_t *sem;
+	// Crear o abrir un semáforo con nombre
+	sem = sem_open("/mi_semaforo", O_CREAT, S_IRUSR | S_IWUSR, 1);
+	if (sem == SEM_FAILED)
+	{
+		perror("Error al abrir el semáforo");
+		exit(EXIT_FAILURE);
+	}
+	printf("Semáforo creado o abierto correctamente\n");
+	// Cerrar el semáforo
+	sem_close(sem);
+	// Eliminar el semáforo
+	sem_unlink("/mi_semaforo");
+	return 0;
+}
+
+6. Notas importantes.
+.- Persistencia: Los semáforos con nombre persisten en el sistema hasta que se eliminan
+explícitamente con sem_unlink.
+.- Uso adecuado: Es útil para sincronizar procesos que no comparten memoria.
+
+7. Errores comunes:
+.- Usar un nombre de semáforo inválido.
+.- Intentar abrir un semáforo que no existe sin usar O_CREAT.

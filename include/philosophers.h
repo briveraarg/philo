@@ -19,6 +19,8 @@
 # include <pthread.h>   // pthread & mutex
 # include <limits.h>	// atol
 # include <unistd.h>    // write
+# include <stdint.h>
+# include <string.h>
 
 # define LIVE 0
 # define DEAD 1
@@ -32,7 +34,7 @@
 # define NO_MAX_MEALS -1
 
 # define FORK 	"has taken a fork"
-# define DIED	"has died"
+# define DIED	"died"
 # define EAT	"is eating"
 # define SLEEP	"is sleeping"
 # define THINK	"is thinking"
@@ -91,5 +93,5 @@ long			ph_atol(const char *str);
 int				ft_isdigit(int c);
 unsigned long	ph_get_time(void);
 void			ph_print_msg(t_philo *philo, char *msg, int i);
-
+void			*ft_calloc(size_t count, size_t size);
 #endif

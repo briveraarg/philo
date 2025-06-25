@@ -1,0 +1,41 @@
+1. gettimeofday.
+Se utiliza para obtener la hora actual del sistema con una precisión de microsegundos. Es
+parte de la biblioteca estándar de Unix y se encuentra en el archivo de cabecera
+<sys/time.h>.
+
+2. Sintaxis.
+
+int	gettimeofday(struct timeval *tv, struct timezone *tz);
+
+.- Parámetros.
+.- tv: Un puntero a una estructura timeval que almacena:
+	.- tv_sec: Segundos desde el 1 de enero de 1970 (Epoch).
+	.- tv_usec: Microsegundos adicionales.
+	.- tz: Un puntero a una estructura timezone. En sistemas modernos, generalmente
+	se pasa como NULL porque esta funcionalidad está obsoleta.
+
+3. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve -1 si ocurre un error, y establece la variable global errno para indicar el
+tipo de error.
+
+4. Ejemplo de uso.
+
+#include <sys/time.h>
+#include <stdio.h>
+
+int main()
+{
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	printf("Segundos: %ld\n", tv.tv_sec);
+	printf("Microsegundos: %ld\n", tv.tv_usec);
+	return 0;
+}
+
+5. Notas importantes.
+.- La función gettimeofday no es ideal para medir intervalos de tiempo debido a posibles
+ajustes del reloj del sistema. Para este propósito, se recomienda usar clock_gettime con
+CLOCK_MONOTONIC.
+.- Es útil para registrar marcas de tiempo o calcular diferencias de tiempo en
+aplicaciones no críticas.

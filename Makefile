@@ -63,7 +63,8 @@ re:	fclean all
 
 # Memory leaks (Valgrind)
 valgrind:
-	valgrind -s \
+	valgrind \
+		--tool=memcheck \
 		--leak-check=full \
 		--show-leak-kinds=all \
 		--show-reachable=yes \

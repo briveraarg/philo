@@ -1,0 +1,49 @@
+1. pthread_mutex_init.
+Se utiliza para inicializar un mutex, que es un mecanismo de sincronización utilizado para
+proteger secciones críticas del código en programas multihilo. Es parte de la biblioteca
+POSIX y se encuentra en el archivo de cabecera <pthread.h>.
+
+2. Sintaxis.
+
+int	pthread_mutex_init(pthread_mutex_t *mutex, const pthread_mutexattr_t *attr);
+
+3. Parámetros.
+.- mutex: Un puntero a la variable de tipo pthread_mutex_t que representa el mutex que se
+desea inicializar.
+.- attr: Un puntero a una estructura pthread_mutexattr_t que especifica los atributos del
+mutex. Si se pasa como NULL, se utilizan los atributos predeterminados.
+
+4. Valor de retorno.
+.- Devuelve 0 si la operación se realiza con éxito.
+.- Devuelve un código de error distinto de cero si ocurre un problema.
+
+5. Ejemplo de uso.
+
+#include <pthread.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int main()
+{
+	pthread_mutex_t mutex;
+	// Inicializar el mutex con atributos predeterminados
+	if (pthread_mutex_init(&mutex, NULL) != 0)
+	{
+		perror("Error al inicializar el mutex");
+		exit(EXIT_FAILURE);
+	}
+	printf("Mutex inicializado correctamente\n");
+	// Destruir el mutex al finalizar
+	pthread_mutex_destroy(&mutex);
+	return 0;
+}
+
+6. Notas importantes.
+.- Destrucción: Es importante destruir el mutex con pthread_mutex_destroy cuando ya no se
+necesite, para liberar los recursos asociados.
+.- Uso adecuado: Los mutexes se utilizan para evitar condiciones de carrera al acceder a
+recursos compartidos entre hilos.
+
+7. Errores comunes:
+.- Intentar inicializar un mutex que ya ha sido inicializado previamente.
+.- Usar un mutex no inicializado en operaciones como pthread_mutex_lock.
