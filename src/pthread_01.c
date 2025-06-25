@@ -6,40 +6,13 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 12:25:06 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 12:32:34 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/25 12:25:27 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 /*
- * ph_routine - Ejecuta una vuelta completa del ciclo de vida del filósofo.
- *
- * Este ciclo incluye:
- * 1. Tomar los tenedores para poder comer
- *    (bloqueando los mutex correspondientes).
- * 2. Registrar el tiempo de la última comida
- *    y aumentar el contador de comidas.
- *    Esto se hace bajo un mutex privado para evitar condiciones de carrera.
- * 3. Dormir el tiempo correspondiente a "comer"
- *    (simula la duración de la comida).
- * 4. Liberar los tenedores y pasar a dormir y luego pensar
- *    (ph_rest_and_think).
- *
-  */
-
-void	ph_routine(t_philo *philo)
-{
-	ph_pick_up_forks(philo);
-	pthread_mutex_lock(philo->private_lock);
-	philo->last_meal_time = ph_get_time();
-	philo->meals_eaten++;
-	pthread_mutex_unlock(philo->private_lock);
-	ph_sleep_precise(philo->table->time_to_eat);
-	ph_rest_and_think(philo);
-}
-
-/**
  * ph_thread_loop - Función que representa el ciclo de vida de cada filósofo.
  * 
  * Esta función es el punto de entrada de cada hilo (pthread)
@@ -117,36 +90,7 @@ int	ph_all_philos_finished(t_philo *philo)
 	return (FALSE);
 }
 
-void	*ph_watch_philos(void *arg)
-{
-	unsigned int	i;
-	t_philo			*philos;
-
-	philos = (t_philo *)arg;
-	while (1)
-	{
-		i = 0;
-		while (i < philos->table->num_philos)
-		{
-			if (ph_philo_check_deat(&philos[i]) == TRUE) 
-				return ((void *)0);
-			i++;
-			if (ph_all_philos_finished(&philos[i]) == TRUE)
-				return ((void *) 0);
-		}
-	}
-	return ((void *)0);
-}
-
-void	ph_monitor(t_philo *philos, pthread_t *monitor)
-{
-	if (pthread_create(monitor, NULL, &ph_watch_philos, &philos) != SUCCESS)
-	{
-		ph_clean(philos);
-		return ;
-	}
-}
-/**
+/*
  * Maneja el caso especial en el que solo hay un filósofo en la mesa.
  *
  * En el problema de los filósofos, si solo hay un filósofo, este solo puede
@@ -167,9 +111,8 @@ void	ph_monitor(t_philo *philos, pthread_t *monitor)
 void	ph_handle_single(t_table *table, t_philo *philo)
 {
 	table->start_time = ph_get_time();
-
-	ph_print_msg(&philo[0], "🤚 has taken a fork", 1);
+	ph_print_msg(&philo[0], FORK, 1);
 	ph_sleep_precise(table->time_to_die);
-	ph_print_msg(&philo[0], "👻 has died", 2);
+	ph_print_msg(&philo[0], DIED, 2);
 	ph_clean(philo);
 }

@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:24:44 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 14:17:59 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/25 12:13:27 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,13 @@
 # define TRUE 0
 # define FALSE 1
 
-#define NO_MAX_MEALS -1
+# define NO_MAX_MEALS -1
+
+# define FORK 	"has taken a fork"
+# define DIED	"has died"
+# define EAT	"is eating"
+# define SLEEP	"is sleeping"
+# define THINK	"is thinking"
 
 typedef struct s_table
 {
@@ -62,12 +68,15 @@ typedef struct s_philo
 
 int				ph_input_check(int argc, char **argv);
 int				ph_init_structs(int arg, char **argv, t_table **t, t_philo **p);
-void			*ph_thread_loop(void *arg);
-void			ph_print_msg(t_philo *philo, char *msg, int i);
-void			ph_clean(t_philo *philo);
 int				ph_is_dead(t_philo *philo);
-void			ph_sleep_precise(unsigned long time);
 int				ph_has_finished_meals(t_philo *philo);
+int				ph_philo_check_deat(t_philo *philo);
+int				ph_all_philos_finished(t_philo *philo);
+int				ph_monitor(t_philo *philos, pthread_t *monitor);
+int				ph_simulate(t_table *table, t_philo *philos);
+void			*ph_thread_loop(void *arg);
+void			ph_clean(t_philo *philo);
+void			ph_sleep_precise(unsigned long time);
 void			ph_rest_and_think(t_philo *philo);
 void			ph_pick_up_forks(t_philo *philo);
 void			ph_routine(t_philo *philo);
@@ -81,5 +90,6 @@ void			ft_putstr(char *str);
 long			ph_atol(const char *str);
 int				ft_isdigit(int c);
 unsigned long	ph_get_time(void);
+void			ph_print_msg(t_philo *philo, char *msg, int i);
 
 #endif

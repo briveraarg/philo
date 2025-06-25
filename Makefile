@@ -6,7 +6,7 @@
 #    By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/23 16:19:58 by brivera           #+#    #+#              #
-#    Updated: 2025/06/23 20:03:24 by brivera          ###   ########.fr        #
+#    Updated: 2025/06/25 12:27:13 by brivera          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ SRCS	:=	$(SRC_DIR)main.c \
 			$(SRC_DIR)init_struct.c \
 			$(SRC_DIR)pthread_01.c \
 			$(SRC_DIR)pthread_00.c \
+			$(SRC_DIR)pthread_02.c \
+			$(SRC_DIR)pthread_03.c \
 			$(SRC_DIR)pthread_free.c \
 			$(SRC_DIR)pthread_utils.c
 
