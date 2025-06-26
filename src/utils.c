@@ -6,11 +6,54 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 17:19:42 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 11:45:42 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 15:14:05 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+static size_t	ft_count_digits(int n)
+{
+	size_t	count;
+
+	count = 0;
+	if (n <= 0)
+		count = 1;
+	while (n != 0)
+	{
+		n /= 10;
+		count++;
+	}
+	return (count);
+}
+
+char	*ft_itoa(int n)
+{
+	char			*str;
+	unsigned int	num;
+	size_t			i;
+
+	str = ft_calloc(ft_count_digits(n) + 1, sizeof(char));
+	if (!str)
+		return (NULL);
+	if (n < 0)
+	{
+		str[0] = '-';
+		num = (unsigned int)(-n);
+	}
+	else
+		num = (unsigned int)n;
+	i = ft_count_digits(n) - 1;
+	while (num > 0)
+	{
+		str[i] = (char)((num % 10) + '0');
+		num /= 10;
+		i--;
+	}
+	if (n == 0)
+		str[0] = '0';
+	return (str);
+}
 
 int	ft_isdigit(int c)
 {
@@ -45,24 +88,6 @@ long	ph_atol(const char *str)
 	return (num * sig);
 }
 
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	ft_putstr(char *str)
-{
-	int	len;
-
-	len = ft_strlen(str);
-	write(1, str, len);
-}
-
 void	*ft_calloc(size_t count, size_t size)
 {
 	unsigned char	*ptr;
@@ -77,5 +102,3 @@ void	*ft_calloc(size_t count, size_t size)
 	memset(ptr, 0, total_bytes);
 	return (ptr);
 }
-
-

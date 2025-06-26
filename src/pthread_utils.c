@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 11:44:20 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 14:16:20 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 16:01:39 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,54 +15,9 @@
 unsigned long	ph_get_time(void)
 {
 	struct timeval	tv;
-	unsigned long	time;
 
 	gettimeofday(&tv, NULL);
-	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	return (time);
-}
-
-static size_t	ft_count_digits(int n)
-{
-	size_t	count;
-
-	count = 0;
-	if (n <= 0)
-		count = 1;
-	while (n != 0)
-	{
-		n /= 10;
-		count++;
-	}
-	return (count);
-}
-
-char	*ft_itoa(int n)
-{
-	char			*str;
-	unsigned int	num;
-	size_t			i;
-
-	str = ft_calloc(ft_count_digits(n) + 1, sizeof(char));
-	if (!str)
-		return (NULL);
-	if (n < 0)
-	{
-		str[0] = '-';
-		num = (unsigned int)(-n);
-	}
-	else
-		num = (unsigned int)n;
-	i = ft_count_digits(n) - 1;
-	while (num > 0)
-	{
-		str[i] = (char)((num % 10) + '0');
-		num /= 10;
-		i--;
-	}
-	if (n == 0)
-		str[0] = '0';
-	return (str);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
 char	*ft_utoa(unsigned long n)
@@ -92,28 +47,19 @@ char	*ft_utoa(unsigned long n)
 	return (str);
 }
 
-
-void	ph_print_msg(t_philo *philo, char *msg, int i)
+void	print_forks(t_philo *philos, unsigned int num_philos)
 {
-	unsigned long	time;
-	char			*time_str;
-	char			*id_str;
+	unsigned int	i;
 
-	(void) i;
-	time = ph_get_time() - philo->table->start_time;
-	pthread_mutex_lock(philo->table->public_lock);
-	if (philo->table->status == 0)
+	printf("Asignación de tenedores:\n");
+	i = 0;
+	while (i < num_philos)
 	{
-		time_str = ft_utoa(time);
-		id_str = ft_itoa(philo->id);
-		ft_putstr(time_str);
-		ft_putstr(" ");
-		ft_putstr(id_str);
-		ft_putstr(" ");
-		ft_putstr(msg);
-		ft_putstr("\n");
-		free(time_str);
-		free(id_str);
+		printf("Filósofo %u:\n", philos[i].id);
+		printf("  Tenedor derecho (fork %u): %p\n",
+			i, (void *)philos[i].right_fork);
+		printf("  Tenedor izquierdo (fork %u): %p\n",
+			(i + 1) % num_philos, (void *)philos[i].left_fork);
+		i++;
 	}
-	pthread_mutex_unlock(philo->table->public_lock);
 }

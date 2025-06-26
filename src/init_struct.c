@@ -6,13 +6,12 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:00:34 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/24 14:14:55 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 15:50:33 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-// Inicializa los mutex de los tenedores
 int	ph_init_forks(t_table *table)
 {
 	unsigned int	i;
@@ -29,8 +28,6 @@ int	ph_init_forks(t_table *table)
 	}
 	return (SUCCESS);
 }
-
-// Inicializa la estructura t_table con los valores pasados como argumento
 
 int	ph_init_data(int argc, char **argv, t_table *table)
 {
@@ -57,8 +54,6 @@ int	ph_init_data(int argc, char **argv, t_table *table)
 	return (SUCCESS);
 }
 
-
-// Inicializa los filósofos, sus locks privados y referencias a tenedores
 int	ph_init_philos(t_table *table, t_philo *philos)
 {
 	unsigned int	i;
@@ -85,7 +80,6 @@ int	ph_init_philos(t_table *table, t_philo *philos)
 	return (SUCCESS);
 }
 
-// Reserva memoria e inicializa estructuras principales
 int	ph_init_structs(int argc, char **argv, t_table **table, t_philo **philos)
 {
 	*table = ft_calloc(1, sizeof(t_table));

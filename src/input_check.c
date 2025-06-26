@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 18:03:49 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/23 18:04:03 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 15:48:59 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ph_check_size(int argc, char **argv)
 	i = 1;
 	while (i < argc)
 	{
-		if (ph_atol(argv[i]) < 0 || ph_atol(argv[i]) > INT_MAX)
+		if (ph_atol(argv[i]) < 0 || ph_atol(argv[i]) >= INT_MAX)
 			return (FALSE);
 		i++;
 	}

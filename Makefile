@@ -6,7 +6,7 @@
 #    By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/23 16:19:58 by brivera           #+#    #+#              #
-#    Updated: 2025/06/25 12:27:13 by brivera          ###   ########.fr        #
+#    Updated: 2025/06/26 15:15:16 by brivera          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRC_DIR :=	src/
 SRCS	:=	$(SRC_DIR)main.c \
 			$(SRC_DIR)utils.c \
 			$(SRC_DIR)input_check.c \
+			$(SRC_DIR)print_msj.c \
 			$(SRC_DIR)init_struct.c \
 			$(SRC_DIR)pthread_01.c \
 			$(SRC_DIR)pthread_00.c \
