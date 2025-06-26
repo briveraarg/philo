@@ -6,7 +6,7 @@
 #    By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/23 16:19:58 by brivera           #+#    #+#              #
-#    Updated: 2025/06/26 15:15:16 by brivera          ###   ########.fr        #
+#    Updated: 2025/06/26 19:56:57 by brivera          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ SRCS	:=	$(SRC_DIR)main.c \
 			$(SRC_DIR)pthread_utils.c
 
 OBJ_DIR	:=	obj/
-OBJS	:=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJS	:= $(SRCS:$(SRC_DIR)%.c=$(OBJ_DIR)%.o)
 
 INCLUDE	:=	include/philosophers.h
 

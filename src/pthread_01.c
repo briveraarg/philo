@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 12:25:06 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/25 12:25:27 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 19:33:23 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,27 @@ void	*ph_thread_loop(void *arg)
 		if (ph_has_finished_meals(philo) == TRUE)
 			return ((void *) 0);
 		ph_routine(philo);
+		usleep(500);
 	}
 	return ((void *) 0);
 }
+
+/*
+ * 
+ * Verifica si un filósofo ha muerto por no comer a tiempo.
+ * 
+ * Para ello:
+ * - Accede al tiempo de la última comida del filósofo
+ * 	 de forma segura usando un mutex privado.
+ * - Compara el tiempo transcurrido desde la última comida
+ * 	 con el tiempo máximo permitido para morir.
+ * - Si el filósofo superó ese tiempo y no completó la cantidad máx de comidas,
+ * 	 se considera muerto.
+ * - Imprime el mensaje de muerte y actualiza el estado global a DEAD,
+ * 	 protegiendo el acceso con un mutex público.
+ * 
+ * Devuelve TRUE si el filósofo murió, FALSE en caso contrario.
+ */
 
 int	ph_philo_check_deat(t_philo *philo)
 {
@@ -76,6 +94,19 @@ int	ph_philo_check_deat(t_philo *philo)
 	return (FALSE);
 }
 
+/*
+ *
+ * Verifica si todos los filósofos han terminado de comer la cantidad
+ * máxima de veces establecida en la tabla.
+ *
+ * Para asegurar el acceso seguro a la variable compartida 'done', que
+ * cuenta cuántos filósofos finalizaron, utiliza un mutex.
+ *
+ * Devuelve TRUE si la cantidad de filósofos que terminaron ('done') es
+ * mayor o igual al total de filósofos ('num_philos'), indicando que
+ * todos finalizaron; devuelve FALSE en caso contrario.
+ */
+
 int	ph_all_philos_finished(t_philo *philo)
 {
 	int	goal;
@@ -92,6 +123,7 @@ int	ph_all_philos_finished(t_philo *philo)
 
 /*
  * Maneja el caso especial en el que solo hay un filósofo en la mesa.
+ * "cronica de una muerte anunciada"
  *
  * En el problema de los filósofos, si solo hay un filósofo, este solo puede
  * tomar un tenedor y nunca podrá comer, por lo que inevitablemente muere.
@@ -106,7 +138,6 @@ int	ph_all_philos_finished(t_philo *philo)
  * @param table Puntero a la estructura principal de la mesa.
  * @param philo Puntero al único filósofo presente.
  */
-
 
 void	ph_handle_single(t_table *table, t_philo *philo)
 {

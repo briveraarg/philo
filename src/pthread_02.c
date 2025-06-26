@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 11:46:11 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/25 12:10:20 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 19:17:42 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*ph_watch_philos(void *arg)
 		i = 0;
 		while (i < philos->table->num_philos)
 		{
-			if (ph_philo_check_deat(&philos[i]) == TRUE) 
+			if (ph_philo_check_deat(&philos[i]) == TRUE)
 				return ((void *)0);
 			if (ph_all_philos_finished(&philos[i]) == TRUE)
 				return ((void *) 0);
@@ -33,27 +33,28 @@ void	*ph_watch_philos(void *arg)
 	return ((void *)0);
 }
 
-int	ph_monitor(t_philo *philos, pthread_t *monitor)
+/* int	ph_monitor(t_philo *philos, pthread_t *monitor)
 {
 	if (pthread_create(monitor, NULL, &ph_watch_philos, philos) != SUCCESS)
 		return (FAIL);
 	return (SUCCESS);
-}
+} */
 
 int	ph_run_threads(pthread_t *threads, t_table *table, t_philo *philos)
 {
 	unsigned int	i;
-	pthread_t		monitor;
 
 	i = 0;
 	table->start_time = ph_get_time();
 	while (i < table->num_philos)
 	{
-		if (pthread_create(&threads[i], NULL, &ph_thread_loop, &philos[i]) != SUCCESS)
+		if (pthread_create(&threads[i], NULL,
+				&ph_thread_loop, &philos[i]) != SUCCESS)
 			return (FAIL);
 		i++;
 	}
-	if (ph_monitor(philos, &monitor) != SUCCESS)
+	if (pthread_create(&threads[table->num_philos + 1],
+			NULL, &ph_watch_philos, philos) != SUCCESS)
 		return (FAIL);
 	i = 0;
 	while (i < table->num_philos)
@@ -62,7 +63,7 @@ int	ph_run_threads(pthread_t *threads, t_table *table, t_philo *philos)
 			return (FAIL);
 		i++;
 	}
-	pthread_join(monitor, NULL);
+	pthread_join(threads[table->num_philos + 1], NULL);
 	return (SUCCESS);
 }
 
@@ -74,7 +75,7 @@ int	ph_simulate(t_table *table, t_philo *philos)
 	if (!threads)
 		return (FAIL);
 	if (ph_run_threads(threads, table, philos) == FAIL)
-		return (FAIL);
+		return (free(threads), FAIL);
 	free(threads);
 	return (SUCCESS);
 }

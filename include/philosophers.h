@@ -6,19 +6,19 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/05 16:24:44 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/26 16:03:46 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 19:57:26 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# include <stdlib.h>    // malloc, free, and exit
-# include <unistd.h>    // usleep and write
-# include <sys/time.h>  // gettimeofday
-# include <pthread.h>   // pthread & mutex
-# include <limits.h>	// atol
-# include <unistd.h>    // write
+# include <stdlib.h>
+# include <unistd.h> 
+# include <sys/time.h>
+# include <pthread.h> 
+# include <limits.h>	
+# include <unistd.h>    
 # include <stdint.h>
 # include <string.h>
 # include <stdio.h>
@@ -43,7 +43,7 @@
 # define COLOR_TECH_GREEN	"\033[1;38;5;49m"
 # define COLOR_TECH_BLUE	"\033[1;38;5;75m"
 # define COLOR_TECH_VIOLET	"\033[1;38;5;135m"
-# define COLOR_TECH_RED		"\033[1;38;5;239m"
+#define COLOR_TECH_RED		"\033[1;38;5;196m"
 # define COLOR_RESET		"\033[0m"
 
 

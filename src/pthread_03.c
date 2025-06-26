@@ -6,7 +6,7 @@
 /*   By: brivera <brivera@student.42madrid.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 12:23:48 by brivera           #+#    #+#             */
-/*   Updated: 2025/06/25 12:26:17 by brivera          ###   ########.fr       */
+/*   Updated: 2025/06/26 18:39:55 by brivera          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 /*
  * ph_pick_up_forks - Simula que el filósofo toma ambos tenedores para comer.
  *
- * El filósofo primero toma (bloquea) el tenedor de su derecha
- * y luego el de su izquierda,
+ * El filósofo primero toma (bloquea) sus tenedores pero dependiendio 
+ * el oden si son pares o impares.
+ * Pares => derecha / izquierda.
+ * Impares => izquierda / derecha.
  * imprimiendo un mensaje después de cada acción. Al tomar ambos,
  * imprime que está comiendo.
  *
@@ -25,12 +27,23 @@
 
 void	ph_pick_up_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->right_fork);
-	ph_print_msg(philo, FORK, 1);
-	pthread_mutex_lock(philo->left_fork);
-	ph_print_msg(philo, FORK, 1);
+	if (philo->id % 2 == 0)
+	{
+		pthread_mutex_lock(philo->right_fork);
+		ph_print_msg(philo, FORK, 1);
+		pthread_mutex_lock(philo->left_fork);
+		ph_print_msg(philo, FORK, 1);
+	}
+	else
+	{
+		pthread_mutex_lock(philo->left_fork);
+		ph_print_msg(philo, FORK, 1);
+		pthread_mutex_lock(philo->right_fork);
+		ph_print_msg(philo, FORK, 1);
+	}
 	ph_print_msg(philo, EAT, 0);
 }
+
 
 /*
  * El filósofo suelta los tenedores después de comer,
