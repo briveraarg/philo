@@ -45,6 +45,8 @@ void	ph_pick_up_forks(t_philo *philo)
 }
 
 /*
+ * ph_rest_and_think
+ * 
  * El filósofo suelta los tenedores después de comer,
  * imprime que va a dormir, duerme un tiempo determinado,
  * y luego imprime que está pensando.
