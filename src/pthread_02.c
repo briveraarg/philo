@@ -33,13 +33,6 @@ void	*ph_watch_philos(void *arg)
 	return ((void *)0);
 }
 
-/* int	ph_monitor(t_philo *philos, pthread_t *monitor)
-{
-	if (pthread_create(monitor, NULL, &ph_watch_philos, philos) != SUCCESS)
-		return (FAIL);
-	return (SUCCESS);
-} */
-
 int	ph_run_threads(pthread_t *threads, t_table *table, t_philo *philos)
 {
 	unsigned int	i;
@@ -53,7 +46,7 @@ int	ph_run_threads(pthread_t *threads, t_table *table, t_philo *philos)
 			return (FAIL);
 		i++;
 	}
-	if (pthread_create(&threads[table->num_philos + 1],
+	if (pthread_create(&threads[table->num_philos],
 			NULL, &ph_watch_philos, philos) != SUCCESS)
 		return (FAIL);
 	i = 0;
@@ -63,7 +56,7 @@ int	ph_run_threads(pthread_t *threads, t_table *table, t_philo *philos)
 			return (FAIL);
 		i++;
 	}
-	pthread_join(threads[table->num_philos + 1], NULL);
+	pthread_join(threads[table->num_philos], NULL);
 	return (SUCCESS);
 }
 

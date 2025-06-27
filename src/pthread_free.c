@@ -12,7 +12,6 @@
 
 #include "philosophers.h"
 
-// Libera y destruye todos los mutex creados
 void	ph_destroy_mutexes(t_philo *philo)
 {
 	unsigned int	i;
@@ -28,7 +27,6 @@ void	ph_destroy_mutexes(t_philo *philo)
 	pthread_mutex_destroy(philo->table->finished);
 }
 
-// Libera toda la memoria dinámica reservada
 void	ph_clean(t_philo *philo)
 {
 	if (philo->table)
@@ -38,12 +36,12 @@ void	ph_clean(t_philo *philo)
 			free(philo->table->forks);
 		if (philo->table->private_locks)
 			free(philo->table->private_locks);
-        if (philo->table->public_lock)
-		    free(philo->table->public_lock);
+		if (philo->table->public_lock)
+			free(philo->table->public_lock);
 		if (philo->table->finished)
-            free(philo->table->finished);
-        if (philo->table)
-		    free(philo->table);
+			free(philo->table->finished);
+		if (philo->table)
+			free(philo->table);
 	}
 	free(philo);
 }

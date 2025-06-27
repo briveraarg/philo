@@ -94,4 +94,3 @@ int	ph_init_structs(int argc, char **argv, t_table **table, t_philo **philos)
 		return (FAIL);
 	return (SUCCESS);
 }
-

@@ -21,7 +21,6 @@ int	main(int argc, char **argv)
 		return (ft_putstr("❌ invalid input\n", 2), FAIL);
 	if (ph_init_structs(argc, argv, &table, &philos) == FAIL)
 		return (ph_clean(philos), FAIL);
-	print_forks(philos, table->num_philos);
 	if (table->num_philos == 1)
 		return (ph_handle_single(table, philos), SUCCESS);
 	if (ph_simulate(table, philos) == FAIL)

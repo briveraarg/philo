@@ -43,7 +43,7 @@
 # define COLOR_TECH_GREEN	"\033[1;38;5;49m"
 # define COLOR_TECH_BLUE	"\033[1;38;5;75m"
 # define COLOR_TECH_VIOLET	"\033[1;38;5;135m"
-#define COLOR_TECH_RED		"\033[1;38;5;196m"
+# define COLOR_TECH_RED		"\033[1;38;5;196m"
 # define COLOR_RESET		"\033[0m"
 
 
@@ -95,14 +95,12 @@ void			ph_handle_single(t_table *table, t_philo *philo);
 /*								utils										 */
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-void			ft_putstr(char *str, int fd);
-long			ph_atol(const char *str);
 char			*ft_itoa(int n);
 char			*ft_utoa(unsigned long n);
 int				ft_isdigit(int c);
+long			ph_atol(const char *str);
 unsigned long	ph_get_time(void);
+void			ft_putstr(char *str, int fd);
 void			ph_print_msg(t_philo *philo, char *msg, int i);
 void			*ft_calloc(size_t count, size_t size);
-void			print_forks(t_philo *philos, unsigned int num_philos); //borrar
-
 #endif

@@ -44,7 +44,6 @@ void	ph_pick_up_forks(t_philo *philo)
 	ph_print_msg(philo, EAT, 0);
 }
 
-
 /*
  * El filósofo suelta los tenedores después de comer,
  * imprime que va a dormir, duerme un tiempo determinado,
