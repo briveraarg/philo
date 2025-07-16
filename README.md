@@ -18,8 +18,6 @@ El desafío principal es asegurar que:
 ```bash
 
 philo/
-├── .gitignore
-├── LICENCIA
 ├── Makefile
 ├── include/
 │   └── philosophers.h
