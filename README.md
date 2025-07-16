@@ -41,9 +41,15 @@ philo/
 
 ## A filosofar!
 
-### 1. Clonar repositorio
-### 2. Compilar el proyecto
-### 3. Ejecutar la simulación
+#### 1. Clonar repositorio y compilar
+
+```bash
+   git clone https://github.com/yourusername/philo.git
+   cd philo
+   make
+```
+
+#### 2. Ejecutar la simulación
 
 ```bash
 
@@ -61,29 +67,26 @@ philo/
 | `./philo 2 210 100 100`   | 2 filósofos, mueren tras 2100ms                                     | `"X 1 died"` (por inanición)                    |
 
 
+
 ## 🛠️ Más controles
 
-### ✅ Fugas de memoria (Valgrind)
-
 ```bash
+
+#Fugas de memoria
 valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes ./philo 5 410 200 200
-```
 
-### ⚔️ Condiciones de carrera (Helgrind)
-
-```bash
+### Condiciones de carrera (Helgrind)
 valgrind --tool=helgrind ./philo 5 410 200 200
-```
 
-### 🧵 ThreadSanitizer
+### hreadSanitizer
 
-```bash
 ./philo_tsan 5 410 200 200  # Compilado con -fsanitize=thread
+
 ```
 
 ---
 
-## 🎓 Qué se aprende con este proyecto
+## Qué se aprende con este proyecto
 
 * Uso de **hilos de ejecución** (`pthread_create`, `pthread_join`, etc.)
 * Uso correcto de **mutexes** para proteger recursos compartidos
@@ -97,12 +100,17 @@ Este proyecto es una excelente introducción a la **programación concurrente** 
 
 ---
 
+
+
 ## 📜 Licencia
 
 Este proyecto está bajo la licencia especificada en el archivo `LICENCIA`.
+
+
+
 
 ## 💬 Contacto
 
 Creado por **Brenda Rivera**  
 📧 brennriveraa@gmail.com
-🇦🇷 Desde Argentina, estudiando en 42 Madrid 
+🇦🇷 Estudiandante de 42 Madrid 
